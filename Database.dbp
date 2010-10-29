@@ -9,6 +9,9 @@ Begin DataProject = "Database"
       Begin Folder = "V010_to_V011"
          Script = "upgrade.sql"
       End
+      Begin Folder = "V011_to_V012"
+         Script = "upgrade.sql"
+      End
    End
    Begin Folder = "Create Scripts"
       Begin Folder = "CreateDatabase"
@@ -30,6 +33,8 @@ Begin DataProject = "Database"
          Script = "createGlobalDataStoredProcs.sql"
          Script = "createHistoryStoredProcedures.sql"
          Script = "createMessagesStoredProcs.sql"
+         Script = "createSelectOtherEvents.sql"
+         Script = "createSelectSimilarEvents.sql"
          Script = "createSentEmailHistoryStoredProcs.sql"
          Script = "createTimezonesStoredProcs.sql"
          Script = "createUsersStoredProcs.sql"
