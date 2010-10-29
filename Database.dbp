@@ -1,0 +1,53 @@
+# Microsoft Developer Studio Project File - Database Project
+Begin DataProject = "Database"
+   MSDTVersion = "80"
+   Begin Folder = "Change Scripts"
+      Begin Folder = "V001_to_V010"
+         Script = "Coords column in Events table.sql"
+         Script = "facebook user ID column in Users table.sql"
+      End
+      Begin Folder = "V010_to_V011"
+         Script = "upgrade.sql"
+      End
+   End
+   Begin Folder = "Create Scripts"
+      Begin Folder = "CreateDatabase"
+         Node = "CreateCleanDatabase.bat"
+      End
+      Node = "LoadStoredProcs.bat"
+      Begin Folder = "PopulateTables"
+         Script = "populateAdministrators.sql"
+         Script = "populateCountries.sql"
+         Script = "populateGlobalData.sql"
+         Script = "populateLanguages.sql"
+         Script = "populateTimezones.sql"
+      End
+      Begin Folder = "StoredProcs"
+         Script = "createAddressBookStoredProcs.sql"
+         Script = "createAdministratorsStoredProcs.sql"
+         Script = "createCountryStoredProcs.sql"
+         Script = "createEventsStoredProcs.sql"
+         Script = "createGlobalDataStoredProcs.sql"
+         Script = "createHistoryStoredProcedures.sql"
+         Script = "createMessagesStoredProcs.sql"
+         Script = "createSentEmailHistoryStoredProcs.sql"
+         Script = "createTimezonesStoredProcs.sql"
+         Script = "createUsersStoredProcs.sql"
+      End
+      Begin Folder = "Tables"
+         Script = "createAddressBookTables.sql"
+         Script = "createAdministratorsTables.sql"
+         Script = "createCountryTables.sql"
+         Script = "createEventsTables.sql"
+         Script = "createGlobalDataTables.sql"
+         Script = "createHistoryTables.sql"
+         Script = "createHomePageContent.sql"
+         Script = "createSentEmailHistoryTables.sql"
+         Script = "createUsersTables.sql"
+      End
+   End
+   Begin DBRefFolder = "Database References"
+   End
+   Begin Folder = "Queries"
+   End
+End
