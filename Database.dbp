@@ -12,6 +12,9 @@ Begin DataProject = "Database"
       Begin Folder = "V011_to_V012"
          Script = "upgrade.sql"
       End
+      Begin Folder = "V012_to_V013"
+         Script = "upgrade.sql"
+      End
    End
    Begin Folder = "Create Scripts"
       Begin Folder = "CreateDatabase"

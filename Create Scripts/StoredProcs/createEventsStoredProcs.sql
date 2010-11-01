@@ -197,7 +197,7 @@ BEGIN
 	ON E.UserID = U.UserID
 	WHERE E.Deleted = 0
 	AND U.Deleted = 0
-	ORDER BY E.StartDate
+	ORDER BY E.EventID DESC
 END
 GO
 

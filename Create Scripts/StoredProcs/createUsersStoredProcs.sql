@@ -75,7 +75,8 @@ BEGIN
 		CreatedByFullName,
 		LastUpdatedDate,
 		LastUpdatedByFullName,		
-		FacebookUserID
+		FacebookUserID,
+		FirstLogin
 	)
 	VALUES
 	(
@@ -102,7 +103,8 @@ BEGIN
 		@CreatedByFullName,
 		@LastUpdatedDate,
 		@LastUpdatedByFullName,		
-		@FacebookUserID
+		@FacebookUserID,
+		0		-- FirstLogin
 	)
 	
 	SET @UserID = @@IDENTITY
@@ -134,7 +136,8 @@ BEGIN
 		HomeTown, Birthday, ProfilePicFilename, ProfilePicThumbnail, ProfilePicPreview,
 		ProfileText, CountryID, LanguageID, TimezoneID, EnableSendEmails, AvatarNumber,
 		LoginEnabled, UserPassword, FailedLoginCount, PasswordExpiryDate, LastLoginDate,
-		CreatedDate, CreatedByFullName, LastUpdatedDate, LastUpdatedByFullName, FacebookUserID
+		CreatedDate, CreatedByFullName, LastUpdatedDate, LastUpdatedByFullName, 
+		FacebookUserID, FirstLogin
 	FROM Users
 	WHERE UserID = @UserID
 END
@@ -219,6 +222,31 @@ BEGIN
 		LastUpdatedDate			= @LastUpdatedDate,
 		LastUpdatedByFullName	= @LastUpdatedByFullName,
 		FacebookUserID			= @FacebookUserID
+	WHERE UserID = @UserID
+END
+GO
+
+/*===============================================================
+// Function: spUpdateUserFirstLogin
+// Description:
+//   Update user details
+//=============================================================*/
+PRINT 'Creating spUpdateUserFirstLogin...'
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE type = 'P' AND name = 'spUpdateUserFirstLogin')
+BEGIN
+	DROP Procedure spUpdateUserFirstLogin
+END
+GO
+
+CREATE Procedure spUpdateUserFirstLogin
+	@UserID						int,
+	@FirstLogin					bit
+AS
+BEGIN
+	UPDATE Users
+	SET FirstLogin			= @FirstLogin
 	WHERE UserID = @UserID
 END
 GO
@@ -559,7 +587,8 @@ BEGIN
 		HomeTown, Birthday, ProfilePicFilename, ProfilePicThumbnail, ProfilePicPreview,
 		ProfileText, CountryID, LanguageID, TimezoneID, EnableSendEmails, AvatarNumber,
 		LoginEnabled, UserPassword, FailedLoginCount, PasswordExpiryDate, LastLoginDate,
-		CreatedDate, CreatedByFullName, LastUpdatedDate, LastUpdatedByFullName, FacebookUserID
+		CreatedDate, CreatedByFullName, LastUpdatedDate, LastUpdatedByFullName, 
+		FacebookUserID, FirstLogin
 	FROM Users
 	WHERE FacebookUserID = @FacebookUserID
 END
