@@ -104,7 +104,7 @@ BEGIN
 		@LastUpdatedDate,
 		@LastUpdatedByFullName,		
 		@FacebookUserID,
-		0		-- FirstLogin
+		1		-- FirstLogin
 	)
 	
 	SET @UserID = @@IDENTITY
