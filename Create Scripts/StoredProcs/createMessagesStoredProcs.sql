@@ -163,6 +163,7 @@ BEGIN
 	AND M.MessageRead = 0
 	AND M.UserID = @UserID
 	AND ISNULL(E.Deleted,0) = 0
+	AND ISNULL(M.ParentMessageID,-1) < 0
 END
 GO
 
