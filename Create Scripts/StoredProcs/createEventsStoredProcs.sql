@@ -2437,7 +2437,7 @@ BEGIN
 	WHERE Deleted = 0
 	AND PrivateEvent = 0
 	AND EventAchieved = 0
-	ORDER BY CreatedDate DESC
+	ORDER BY LastUpdatedDate DESC
 	
 END
 GO

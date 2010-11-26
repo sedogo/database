@@ -106,20 +106,25 @@ BEGIN
 		AddressBookID int, 
 		FirstName nvarchar(200), 
 		LastName nvarchar(200), 
-		EmailAddress nvarchar(200)
+		EmailAddress nvarchar(200),
+		ProfilePicThumbnail nvarchar(200),
+		AvatarNumber int
 	)
 
 	INSERT INTO #TempAddressBook
 	(
-		UserID, AddressBookID, FirstName, LastName, EmailAddress
+		UserID, AddressBookID, FirstName, LastName, EmailAddress, 
+			ProfilePicThumbnail, AvatarNumber
 	)
-	SELECT -1 AS UserID, AddressBookID, FirstName, LastName, EmailAddress
+	SELECT -1 AS UserID, AddressBookID, FirstName, LastName, EmailAddress,
+		'', -1
 	FROM AddressBook
 	WHERE UserID = @UserID
 	
 	UNION
 	
-	SELECT DISTINCT(T.UserID) AS UserID, -1 AS AddressBookID, U.FirstName, U.LastName, U.EmailAddress
+	SELECT DISTINCT(T.UserID) AS UserID, -1 AS AddressBookID, U.FirstName, 
+		U.LastName, U.EmailAddress, U.ProfilePicThumbnail, U.AvatarNumber
 	FROM Events E
 	JOIN TrackedEvents T
 	ON E.EventID = T.EventID

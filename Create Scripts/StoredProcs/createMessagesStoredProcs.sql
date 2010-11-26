@@ -270,7 +270,7 @@ BEGIN
 	ON U.UserID = M.PostedByUserID
 	WHERE M.Deleted = 0
 	AND M.MessageRead = 0
-	AND M.UserID = @UserID
+	AND ( M.UserID = @UserID OR M.PostedByUserID = @UserID )
 	AND ISNULL(M.ParentMessageID,-1) < 0
 	AND ISNULL(E.Deleted,0) = 0
 	ORDER BY M.CreatedDate DESC
@@ -310,7 +310,7 @@ BEGIN
 	ON U.UserID = M.PostedByUserID
 	WHERE M.Deleted = 0
 	AND M.MessageRead = 1
-	AND M.UserID = @UserID
+	AND ( M.UserID = @UserID OR M.PostedByUserID = @UserID )
 	AND ISNULL(M.ParentMessageID,-1) < 0
 	AND ISNULL(E.Deleted,0) = 0
 	ORDER BY M.CreatedDate DESC
@@ -415,7 +415,7 @@ BEGIN
 	WHERE M.Deleted = 0
 	AND ISNULL(M.ParentMessageID,-1) = @ParentMessageID
 	AND ISNULL(E.Deleted,0) = 0
-	ORDER BY M.CreatedDate ASC
+	ORDER BY M.CreatedDate DESC
 END
 GO
 
