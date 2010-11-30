@@ -130,7 +130,7 @@ BEGIN
 		PrivateEvent, CreatedFromEventID,
 		EventDescription, EventVenue, MustDo, ShowOnDefaultPage,
 		EventPicFilename, EventPicThumbnail, EventPicPreview,
-		CreatedDate, CreatedByFullName, LastUpdatedDate, LastUpdatedByFullName
+		CreatedDate, CreatedByFullName, LastUpdatedDate, LastUpdatedByFullName, EventGUID
 	FROM Events
 	WHERE EventID = @EventID
 END
@@ -788,7 +788,7 @@ BEGIN
 		C.EventImageFilename, C.EventImagePreview, C.EventVideoFilename, C.EventVideoLink, C.EventLink,
 		C.CreatedDate, C.CreatedByFullName, C.LastUpdatedDate, C.LastUpdatedByFullName,
 		U.FirstName, U.LastName, U.EmailAddress, U.ProfilePicThumbnail, U.ProfilePicPreview, U.AvatarNumber,
-		U.Gender
+		U.Gender, U.UserID, U.GUID
 	FROM EventComments C
 	JOIN Users U
 	ON C.PostedByUserID = U.UserID
@@ -1259,7 +1259,7 @@ BEGIN
 	SELECT T.TrackedEventID, T.EventID, T.UserID, T.ShowOnTimeline, 
 		T.JoinPending, T.CreatedDate, T.LastUpdatedDate,
 		U.EmailAddress, U.FirstName, U.LastName, U.Gender, U.HomeTown, U.Birthday,
-		U.ProfilePicFilename, U.ProfilePicThumbnail, U.ProfilePicPreview, U.AvatarNumber, U.Gender
+		U.ProfilePicFilename, U.ProfilePicThumbnail, U.ProfilePicPreview, U.AvatarNumber, U.Gender, U.GUID
 	FROM TrackedEvents T
 	JOIN Users U
 	ON T.UserID = U.UserID

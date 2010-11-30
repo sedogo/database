@@ -556,7 +556,7 @@ BEGIN
 		HomeTown, Birthday, ProfileText, TimezoneID, AvatarNumber,
 		ProfilePicFilename, ProfilePicThumbnail, ProfilePicPreview, EnableSendEmails,
 		LoginEnabled, UserPassword, FailedLoginCount, PasswordExpiryDate, LastLoginDate,
-		CreatedDate, CreatedByFullName, LastUpdatedDate, LastUpdatedByFullName, FacebookUserID
+		CreatedDate, CreatedByFullName, LastUpdatedDate, LastUpdatedByFullName, FacebookUserID, GUID
 	FROM Users
 	WHERE Deleted = 0
 	AND LoginEnabled = 1
