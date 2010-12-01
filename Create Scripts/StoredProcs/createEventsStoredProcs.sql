@@ -2402,7 +2402,8 @@ BEGIN
 	SELECT TOP 4 EventID, UserID, EventName, EventVenue, DateType,
 		StartDate, RangeStartDate, RangeEndDate, BeforeBirthday,
 		EventAchieved, EventAchievedDate,
-		CategoryID, TimezoneID, EventPicFilename, EventPicThumbnail, EventPicPreview
+		CategoryID, TimezoneID, EventPicFilename, EventPicThumbnail, EventPicPreview,
+		CreatedDate, LastUpdatedDate
 	FROM Events
 	WHERE Deleted = 0
 	AND PrivateEvent = 0
@@ -2432,7 +2433,8 @@ BEGIN
 	SELECT TOP 10 EventID, UserID, EventName, EventVenue, DateType,
 		StartDate, RangeStartDate, RangeEndDate, BeforeBirthday,
 		EventAchieved, EventAchievedDate,
-		CategoryID, TimezoneID, EventPicFilename, EventPicThumbnail, EventPicPreview
+		CategoryID, TimezoneID, EventPicFilename, EventPicThumbnail, EventPicPreview,
+		CreatedDate, LastUpdatedDate
 	FROM Events
 	WHERE Deleted = 0
 	AND PrivateEvent = 0
@@ -2462,7 +2464,8 @@ BEGIN
 	SELECT TOP 4 EventID, UserID, EventName, EventVenue, DateType,
 		StartDate, RangeStartDate, RangeEndDate, BeforeBirthday,
 		EventAchieved, EventAchievedDate,
-		CategoryID, TimezoneID, EventPicFilename, EventPicThumbnail, EventPicPreview
+		CategoryID, TimezoneID, EventPicFilename, EventPicThumbnail, EventPicPreview,
+		CreatedDate, LastUpdatedDate
 	FROM Events
 	WHERE Deleted = 0
 	AND PrivateEvent = 0
