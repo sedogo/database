@@ -302,8 +302,12 @@ CREATE Procedure spDeleteUser
 	@UserID			int
 AS
 BEGIN
+	DECLARE @vNewPass nvarchar(100)
+	SELECT @vNewPass = LOWER(LEFT(NEWID(),8))
+
 	UPDATE Users
-	SET Deleted = 1
+	SET Deleted = 1,
+	EmailAddress = EmailAddress+@vNewPass
 	WHERE UserID = @UserID
 END
 GO
