@@ -133,6 +133,61 @@ END
 GO
 
 /*===============================================================
+// Function: spSelectGetThreadMessageCount
+// Description:
+//   Gets event message count in a thread
+// --------------------------------------------------------------
+// Parameters
+//	 @EventID			int
+//=============================================================*/
+PRINT 'Creating spSelectGetThreadMessageCount...'
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE type = 'P' AND name = 'spSelectGetThreadMessageCount')
+BEGIN
+	DROP Procedure spSelectGetThreadMessageCount
+END
+GO
+
+CREATE Procedure spSelectGetThreadMessageCount
+	@MessageID			int
+AS
+BEGIN
+	SELECT COUNT(*)
+	FROM Messages
+	WHERE ParentMessageID = @MessageID
+	AND Deleted = 0
+
+END
+GO
+
+/*===============================================================
+// Function: spSelectGetAltEmailUserID
+// Description:
+//=============================================================*/
+PRINT 'Creating spSelectGetAltEmailUserID...'
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE type = 'P' AND name = 'spSelectGetAltEmailUserID')
+BEGIN
+	DROP Procedure spSelectGetAltEmailUserID
+END
+GO
+
+CREATE Procedure spSelectGetAltEmailUserID
+	@ParentMessageID			int,
+	@UserID						int
+AS
+BEGIN
+	SELECT PostedByUserID
+	FROM Messages
+	WHERE PostedByUserID <> @UserID
+	AND ( (MessageID = @ParentMessageID) OR (ParentMessageID = @ParentMessageID) )
+
+END
+GO
+
+/*===============================================================
 // Function: spSelectUnreadMessageCountForUser
 // Description:
 //   Gets unread message count for a user
@@ -163,7 +218,7 @@ BEGIN
 	AND M.MessageRead = 0
 	AND M.UserID = @UserID
 	AND ISNULL(E.Deleted,0) = 0
-	AND ISNULL(M.ParentMessageID,-1) < 0
+	--AND ISNULL(M.ParentMessageID,-1) < 0
 END
 GO
 
@@ -270,8 +325,7 @@ BEGIN
 	ON U.UserID = M.PostedByUserID
 	WHERE M.Deleted = 0
 	AND M.MessageRead = 0
-	AND ( M.UserID = @UserID OR M.PostedByUserID = @UserID )
-	AND ISNULL(M.ParentMessageID,-1) < 0
+	AND M.UserID = @UserID
 	AND ISNULL(E.Deleted,0) = 0
 	ORDER BY M.CreatedDate DESC
 END
@@ -310,8 +364,7 @@ BEGIN
 	ON U.UserID = M.PostedByUserID
 	WHERE M.Deleted = 0
 	AND M.MessageRead = 1
-	AND ( M.UserID = @UserID OR M.PostedByUserID = @UserID )
-	AND ISNULL(M.ParentMessageID,-1) < 0
+	AND M.UserID = @UserID
 	AND ISNULL(E.Deleted,0) = 0
 	ORDER BY M.CreatedDate DESC
 END
@@ -413,7 +466,7 @@ BEGIN
 	JOIN Users U
 	ON U.UserID = M.UserID
 	WHERE M.Deleted = 0
-	AND ISNULL(M.ParentMessageID,-1) = @ParentMessageID
+	AND ( (ISNULL(M.ParentMessageID,-1) = @ParentMessageID) OR (M.MessageID = @ParentMessageID) )
 	AND ISNULL(E.Deleted,0) = 0
 	ORDER BY M.CreatedDate DESC
 END
