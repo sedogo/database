@@ -910,6 +910,7 @@ BEGIN
 	ON E.UserID = U.UserID
 	WHERE E.Deleted = 0
 	--AND E.EventAchieved = 0
+	AND U.Deleted = 0
 	AND E.PrivateEvent = 0
 	AND E.UserID <> @UserID			-- Do not return events belonging to the searching user
 	AND ( (@SearchText = '') 
@@ -1009,6 +1010,7 @@ BEGIN
 	ON E.UserID = U.UserID
 	WHERE E.Deleted = 0
 	--AND E.EventAchieved = 0
+	AND U.Deleted = 0
 	AND E.PrivateEvent = 0
 	AND E.UserID <> @UserID			-- Do not return events belonging to the searching user
 	AND ( (UPPER(E.EventName) LIKE '%'+UPPER(@EventName)+'%')
@@ -1079,6 +1081,7 @@ BEGIN
 	JOIN Users U
 	ON E.UserID = U.UserID
 	WHERE E.Deleted = 0
+	AND U.Deleted = 0
 	AND E.ShowOnDefaultPage = 1
 	--AND E.EventAchieved = 0
 	AND E.PrivateEvent = 0
@@ -1231,6 +1234,7 @@ BEGIN
 	JOIN Users U
 	ON U.UserID = E.UserID
 	WHERE T.UserID = @UserID
+	AND U.Deleted = 0
 	AND E.Deleted = 0
 	AND T.ShowOnTimeline = 1
 	ORDER BY E.EventName DESC
@@ -2493,17 +2497,20 @@ GO
 CREATE Procedure spSelectHappeningNowEvents
 AS
 BEGIN
-	SELECT TOP 4 EventID, UserID, EventName, EventVenue, DateType,
-		StartDate, RangeStartDate, RangeEndDate, BeforeBirthday,
-		EventAchieved, EventAchievedDate,
-		CategoryID, TimezoneID, EventPicFilename, EventPicThumbnail, EventPicPreview
-	FROM Events
-	WHERE Deleted = 0
-	AND PrivateEvent = 0
-	AND EventAchieved = 0
-    AND ( ( RangeStartDate <= getdate() AND RangeEndDate >= getdate() )
-       OR convert(varchar(10),StartDate,103) = convert(varchar(10),getdate(),103) )
-	ORDER BY StartDate DESC, RangeEndDate ASC
+	SELECT TOP 4 E.EventID, E.UserID, E.EventName, E.EventVenue, E.DateType,
+		E.StartDate, E.RangeStartDate, E.RangeEndDate, E.BeforeBirthday,
+		E.EventAchieved, E.EventAchievedDate,
+		E.CategoryID, E.TimezoneID, E.EventPicFilename, E.EventPicThumbnail, E.EventPicPreview
+	FROM Events E
+	JOIN Users U
+	ON E.UserID = U.UserID
+	WHERE E.Deleted = 0
+	AND U.Deleted = 0
+	AND E.PrivateEvent = 0
+	AND E.EventAchieved = 0
+    AND ( ( E.RangeStartDate <= getdate() AND E.RangeEndDate >= getdate() )
+       OR convert(varchar(10),E.StartDate,103) = convert(varchar(10),getdate(),103) )
+	ORDER BY E.StartDate DESC, E.RangeEndDate ASC
 	
 END
 GO
@@ -2525,15 +2532,18 @@ GO
 CREATE Procedure spSelectLatestAchievedEvents
 AS
 BEGIN
-	SELECT TOP 4 EventID, UserID, EventName, EventVenue, DateType,
-		StartDate, RangeStartDate, RangeEndDate, BeforeBirthday,
-		EventAchieved, EventAchievedDate,
-		CategoryID, TimezoneID, EventPicFilename, EventPicThumbnail, EventPicPreview
-	FROM Events
-	WHERE Deleted = 0
-	AND PrivateEvent = 0
-	AND EventAchieved = 1
-	order by EventAchievedDate desc
+	SELECT TOP 4 E.EventID, E.UserID, E.EventName, E.EventVenue, E.DateType,
+		E.StartDate, E.RangeStartDate, E.RangeEndDate, E.BeforeBirthday,
+		E.EventAchieved, E.EventAchievedDate,
+		E.CategoryID, E.TimezoneID, E.EventPicFilename, E.EventPicThumbnail, E.EventPicPreview
+	FROM Events E
+	JOIN Users U
+	ON E.UserID = U.UserID
+	WHERE E.Deleted = 0
+	AND U.Deleted = 0
+	AND E.PrivateEvent = 0
+	AND E.EventAchieved = 1
+	order by E.EventAchievedDate desc
 	
 END
 GO
@@ -2556,15 +2566,18 @@ GO
 CREATE Procedure spSelectLatestAchievedEventsFullList
 AS
 BEGIN
-	SELECT TOP 20 EventID, UserID, EventName, EventVenue, DateType,
-		StartDate, RangeStartDate, RangeEndDate, BeforeBirthday,
-		EventAchieved, EventAchievedDate,
-		CategoryID, TimezoneID, EventPicFilename, EventPicThumbnail, EventPicPreview
-	FROM Events
-	WHERE Deleted = 0
-	AND PrivateEvent = 0
-	AND EventAchieved = 1
-	order by EventAchievedDate desc
+	SELECT TOP 20 E.EventID, E.UserID, E.EventName, E.EventVenue, E.DateType,
+		E.StartDate, E.RangeStartDate, E.RangeEndDate, E.BeforeBirthday,
+		E.EventAchieved, E.EventAchievedDate,
+		E.CategoryID, E.TimezoneID, E.EventPicFilename, E.EventPicThumbnail, E.EventPicPreview
+	FROM Events E
+	JOIN Users U
+	ON E.UserID = U.UserID
+	WHERE E.Deleted = 0
+	AND U.Deleted = 0
+	AND E.PrivateEvent = 0
+	AND E.EventAchieved = 1
+	order by E.EventAchievedDate desc
 	
 END
 GO
@@ -2614,18 +2627,21 @@ CREATE Procedure spSelectEventListByFirstLetter
 	@LetterFilter	char(1)
 AS
 BEGIN
-	SELECT EventID, EventName, DateType, StartDate, RangeStartDate, RangeEndDate,
-		BeforeBirthday, CategoryID, TimezoneID, EventAchieved, EventAchievedDate,
-		PrivateEvent, CreatedFromEventID,
-		EventDescription, EventVenue, MustDo,
-		EventPicFilename, EventPicThumbnail, EventPicPreview,
-		CreatedDate, CreatedByFullName, LastUpdatedDate, LastUpdatedByFullName
-	FROM Events
-	WHERE PrivateEvent = 0
-	AND EventAchieved = 0
-	AND Deleted = 0
-	AND SUBSTRING(EventName, 1, 1) = @LetterFilter
-	ORDER BY StartDate
+	SELECT E.EventID, E.EventName, E.DateType, E.StartDate, E.RangeStartDate, E.RangeEndDate,
+		E.BeforeBirthday, E.CategoryID, E.TimezoneID, E.EventAchieved, E.EventAchievedDate,
+		E.PrivateEvent, E.CreatedFromEventID,
+		E.EventDescription, E.EventVenue, E.MustDo,
+		E.EventPicFilename, E.EventPicThumbnail, E.EventPicPreview,
+		E.CreatedDate, E.CreatedByFullName, E.LastUpdatedDate, E.LastUpdatedByFullName
+	FROM Events E
+	JOIN Users U
+	ON E.UserID = U.UserID
+	WHERE E.PrivateEvent = 0
+	AND E.EventAchieved = 0
+	AND E.Deleted = 0
+	AND U.Deleted = 0
+	AND SUBSTRING(E.EventName, 1, 1) = @LetterFilter
+	ORDER BY E.StartDate
 END
 GO
 
@@ -2962,6 +2978,7 @@ BEGIN
 	ON P.EventID = E.EventID
 	WHERE UserID = @UserID
 	AND E.Deleted = 0
+	AND E.PrivateEvent = 0
 	AND P.Deleted = 0
 	
 END
@@ -3010,6 +3027,7 @@ BEGIN
 		ON E.UserID = U.UserID
 		WHERE E.Deleted = 0
 		AND E.EventAchieved = 0
+		AND U.Deleted = 0
 		AND E.PrivateEvent = 0
 		AND ( (@SearchText is null or @SearchText = '') 
 		 OR (UPPER(E.EventName) LIKE '%'+UPPER(@SearchText)+'%')
@@ -3059,6 +3077,7 @@ BEGIN
 		ON E.UserID = U.UserID
 		WHERE E.Deleted = 0
 		AND E.EventAchieved = 0
+		AND U.Deleted = 0
 		AND E.PrivateEvent = 0
 		
 		
@@ -3115,6 +3134,7 @@ BEGIN
 		WHERE E.Deleted = 0
 		AND E.EventAchieved = 0
 		AND E.PrivateEvent = 0
+		AND U.Deleted = 0
 		AND ( (@SearchText is null or @SearchText = '') 
 		 OR (UPPER(E.EventName) LIKE '%'+UPPER(@SearchText)+'%')
 		 OR (UPPER(U.FirstName) + ' ' + UPPER(U.LastName) LIKE '%'+UPPER(@SearchText)+'%') ) 
